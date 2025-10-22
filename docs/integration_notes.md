@@ -29,13 +29,21 @@ This document tracks how the planned frontend experience maps to the current Bir
    - `recording.path` currently returns a filesystem path (e.g., `/app/data/...`). Frontend needs a downloadable/streamable URL, ideally signed or proxied through an API endpoint.
 
 5. **Location metadata**  
-   - `location_hint` is hard-coded to `"unknown"`. If cameras/mics carry location labels, surface them so the UI can show origin per detection bucket.
+   - `location_hint` is hard-coded to `"unknown"`. If streams/mics carry location labels, surface them so the UI can show origin per detection bucket.
 
 6. **Image attribution details**  
    - Response includes `image_url` but lacks attribution text/source license. Consider adding `image_credit` / `image_source_url` to support required credits.
 
 7. **Health / status endpoint**  
    - Helpful for frontend to detect maintenance mode or empty-state messaging (optional but nice-to-have).
+
+8. **Runtime API base URL strategy**
+   - Vite injects `VITE_API_BASE_URL` at build time, so changing environments requires one of:
+     1. Building once per environment with the appropriate env var supplied by CI/CD.
+     2. Serving a runtime JSON/config file that the app fetches on boot and stores globally.
+     3. Running a post-build token replacement (e.g., `envsubst`) just before deploy.
+     4. Using a reverse proxy so the app can call relative paths and let the edge/router decide the upstream.
+   - We're sticking with the single build + env-set-at-build approach for now, but revisit before adding more deploy targets.
 
 ## Open Questions for Backend Team
 - Should summary stats (total detections, unique species) be computed server-side for custom ranges?  
