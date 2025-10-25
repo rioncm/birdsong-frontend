@@ -1,11 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Share+Tech&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html {
-  color-scheme: dark;
-}
+@layer base {
+  :root {
+    color-scheme: light;
+  }
 
-body {
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  html {
+    background-color: theme("colors.brand.background");
+    color: theme("colors.brand.text");
+  }
+
+  body {
+    @apply font-body bg-brand-surface text-brand-text;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-heading text-brand-navy;
+  }
 }

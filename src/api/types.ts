@@ -21,13 +21,16 @@ export interface RecordingPreview {
 export interface DetectionItem {
   id: number;
   recorded_at?: string;
+  device_id?: string;
   device_name?: string;
+  device_display_name?: string;
   confidence?: number;
   start_time?: number;
   end_time?: number;
   species: SpeciesPreview;
   recording: RecordingPreview;
   location_hint?: string;
+  detection_count?: number;
 }
 
 export interface TimelineBucket {
