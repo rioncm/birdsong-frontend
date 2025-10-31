@@ -6,9 +6,9 @@
 
 - Add detail to detection:
     - [x] Image
-        - [ ] clicking thumbnail opens larger version in a "lightbox" sized to cover the timeline width.
+        - [X] clicking thumbnail opens larger version in a "lightbox" sized to cover the timeline width.
     - [x] Short summary about species
-        - [ ] summary display limited to X charcters in timeline display ending with an elipse ... which is clickable show the full summary in view. More info link does not change.  
+        - [X] summary display limited to X charcters in timeline display ending with an elipse ... which is clickable show the full summary in view. More info link does not change.  
     - [x] link to more information 
         - TBD: iNaturalist, Wikipedia, Cornel ??
         - Possible administrative setting in backend

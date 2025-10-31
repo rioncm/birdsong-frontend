@@ -5,6 +5,8 @@ export interface SpeciesPreview {
   genus?: string;
   family?: string;
   image_url?: string;
+  image_thumbnail_url?: string;
+  image_license?: string;
   image_attribution?: string;
   image_source_url?: string;
   summary?: string;
@@ -29,7 +31,6 @@ export interface DetectionItem {
   end_time?: number;
   species: SpeciesPreview;
   recording: RecordingPreview;
-  location_hint?: string;
   detection_count?: number;
 }
 
