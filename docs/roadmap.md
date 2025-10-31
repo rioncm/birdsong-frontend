@@ -4,10 +4,12 @@
 
 - [x] Clean up 5 minute windows to only show one record per species detected with a detection count (timeline endpoint updated in backend v1.x).
 
-- Add detail to detetction:
+- Add detail to detection:
     - [x] Image
+        - [ ] clicking thumbnail opens larger version in a "lightbox" sized to cover the timeline width.
     - [x] Short summary about species
-    - [ ] link to more information 
+        - [ ] summary display limited to X charcters in timeline display ending with an elipse ... which is clickable show the full summary in view. More info link does not change.  
+    - [x] link to more information 
         - TBD: iNaturalist, Wikipedia, Cornel ??
         - Possible administrative setting in backend
     - [x] Update header 

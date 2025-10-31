@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
+
 import type { TimelineBucket } from "../api/types";
+
+const SUMMARY_PREVIEW_LIMIT = 160;
 
 interface TimelineBucketCardProps {
   bucket: TimelineBucket;
@@ -15,6 +19,23 @@ function formatTimeRange(start?: string | null, end?: string | null): string {
 }
 
 export function TimelineBucketCard({ bucket }: TimelineBucketCardProps): JSX.Element {
+  const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
+  const [expandedSummaries, setExpandedSummaries] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    if (!lightboxImage) {
+      return;
+    }
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setLightboxImage(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, [lightboxImage]);
+
   return (
     <article className="rounded-[28px] border border-brand-border bg-white px-5 py-4 shadow-card">
       <header className="mb-4 flex flex-wrap items-center justify-between gap-2">
@@ -29,7 +50,7 @@ export function TimelineBucketCard({ bucket }: TimelineBucketCardProps): JSX.Ele
         </span>
       </header>
       <ul className="space-y-3">
-        {bucket.detections.map((detection) => {
+        {bucket.detections.map((detection, index) => {
           const speciesName = detection.species.common_name ?? detection.species.scientific_name ?? "Unknown species";
           const scientific = detection.species.scientific_name ?? "";
           const recordedAt = detection.recorded_at ? new Date(detection.recorded_at) : undefined;
@@ -41,6 +62,13 @@ export function TimelineBucketCard({ bucket }: TimelineBucketCardProps): JSX.Ele
             ? `${Math.round(detection.confidence * 100)}%`
             : undefined;
           const infoHref = detection.species.info_url ?? "#";
+          const detectionKey = detection.id ? String(detection.id) : `${speciesName}-${index}`;
+          const summary = detection.species.summary?.trim();
+          const isExpanded = !!expandedSummaries[detectionKey];
+          const needsTruncation = summary ? summary.length > SUMMARY_PREVIEW_LIMIT : false;
+          const summaryPreview = summary && needsTruncation && !isExpanded
+            ? summary.slice(0, SUMMARY_PREVIEW_LIMIT).trimEnd()
+            : summary;
 
           return (
             <li
@@ -48,12 +76,19 @@ export function TimelineBucketCard({ bucket }: TimelineBucketCardProps): JSX.Ele
               className="flex gap-3 rounded-3xl border border-brand-border bg-brand-surface px-4 py-3"
             >
               {detection.species.image_url ? (
-                <img
-                  src={detection.species.image_url}
-                  alt={speciesName}
-                  className="h-16 w-16 rounded-2xl object-cover"
-                  loading="lazy"
-                />
+                <button
+                  type="button"
+                  onClick={() => setLightboxImage({ src: detection.species.image_url ?? "", alt: speciesName })}
+                  className="group relative h-16 w-16 overflow-hidden rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-lagoon"
+                >
+                  <img
+                    src={detection.species.image_url}
+                    alt={speciesName}
+                    className="h-full w-full object-cover transition duration-200 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <span className="sr-only">View larger image of {speciesName}</span>
+                </button>
               ) : (
                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-lagoon/10 text-sm font-semibold text-brand-lagoon">
                   {speciesName.slice(0, 2).toUpperCase()}
@@ -80,9 +115,22 @@ export function TimelineBucketCard({ bucket }: TimelineBucketCardProps): JSX.Ele
                   Latest {recordedLabel} · {detection.device_display_name ?? detection.device_name ?? "Unknown source"}
                 </p>
 
-                {detection.species.summary && (
+                {summaryPreview && (
                   <p className="text-sm leading-relaxed text-brand-text/90">
-                    {detection.species.summary}
+                    {summaryPreview}
+                    {needsTruncation && !isExpanded && (
+                      <>
+                        {" "}
+                        <button
+                          type="button"
+                          onClick={() => setExpandedSummaries((prev) => ({ ...prev, [detectionKey]: true }))}
+                          className="font-semibold text-brand-lagoon underline underline-offset-4"
+                          aria-label={`Show full summary for ${speciesName}`}
+                        >
+                          ...
+                        </button>
+                      </>
+                    )}
                   </p>
                 )}
 
@@ -104,6 +152,34 @@ export function TimelineBucketCard({ bucket }: TimelineBucketCardProps): JSX.Ele
           );
         })}
       </ul>
+
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setLightboxImage(null)}
+        >
+          <div
+            className="relative w-full max-w-timeline"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setLightboxImage(null)}
+              className="absolute right-3 top-3 rounded-full bg-black/50 p-2 text-white transition hover:bg-black/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              aria-label="Close image preview"
+            >
+              ×
+            </button>
+            <img
+              src={lightboxImage.src}
+              alt={lightboxImage.alt}
+              className="max-h-[80vh] w-full rounded-3xl object-contain"
+            />
+          </div>
+        </div>
+      )}
     </article>
   );
 }
