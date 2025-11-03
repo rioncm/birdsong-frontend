@@ -13,59 +13,61 @@ interface TimelineSettingsProps {
   isApplying?: boolean;
 }
 
-type DatePresetValue = "latest" | "today" | "yesterday" | "twoDaysAgo" | "custom";
+const GROUPING_OPTIONS = [5, 10, 20, 30, 60];
 
-const BUCKET_OPTIONS = [5, 10, 20, 30, 60];
-const HOUR_OPTIONS = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-const MINUTE_OPTIONS = [0, 15, 30, 45];
-
-const DATE_PRESETS: Array<{ label: string; value: DatePresetValue; offset?: number }> = [
-  { label: "Most recent", value: "latest" },
-  { label: "Today", value: "today", offset: 0 },
-  { label: "Yesterday", value: "yesterday", offset: -1 },
-  { label: "Two days ago", value: "twoDaysAgo", offset: -2 },
-  { label: "Custom date…", value: "custom" }
-];
-
-function startOfLocalDay(date: Date): Date {
-  const copy = new Date(date);
-  copy.setHours(0, 0, 0, 0);
-  return copy;
-}
-
-function addDays(date: Date, amount: number): Date {
-  const copy = new Date(date);
-  copy.setDate(copy.getDate() + amount);
-  return copy;
-}
-
-function isSameDay(left: Date, right: Date): boolean {
-  return (
-    left.getFullYear() === right.getFullYear() &&
-    left.getMonth() === right.getMonth() &&
-    left.getDate() === right.getDate()
-  );
-}
-
-function formatInputDate(date: Date): string {
+function formatDateInput(date: Date): string {
   const year = date.getFullYear();
   const month = `${date.getMonth() + 1}`.padStart(2, "0");
   const day = `${date.getDate()}`.padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
 
-function parseCustomDate(value: string): Date | undefined {
-  if (!value) {
-    return undefined;
+function formatTimeInput(date: Date): string {
+  const hours = `${date.getHours()}`.padStart(2, "0");
+  const minutes = `${date.getMinutes()}`.padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
+function buildAnchorISO(dateValue: string, timeValue: string): string | null {
+  if (!dateValue || !timeValue) {
+    return null;
   }
-  const [yearStr, monthStr, dayStr] = value.split("-");
-  const year = Number(yearStr);
-  const month = Number(monthStr);
-  const day = Number(dayStr);
-  if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) {
-    return undefined;
+  const [hours, minutes] = timeValue.split(":").map(Number);
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return null;
   }
-  return new Date(year, month - 1, day);
+  const [year, month, day] = dateValue.split("-").map(Number);
+  if ([year, month, day].some((part) => Number.isNaN(part))) {
+    return null;
+  }
+  const anchor = new Date(year, (month ?? 1) - 1, day ?? 1);
+  anchor.setHours(hours, minutes, 0, 0);
+  return anchor.toISOString();
+}
+
+function parseStartCursor(startCursor?: string | null) {
+  if (!startCursor) {
+    return null;
+  }
+  const parsed = new Date(startCursor);
+  if (Number.isNaN(parsed.getTime())) {
+    return null;
+  }
+  return {
+    date: formatDateInput(parsed),
+    time: formatTimeInput(parsed)
+  };
+}
+
+function formatDateTimeDisplay(dateValue: string, timeValue: string): string {
+  const parsed = new Date(`${dateValue}T${timeValue}`);
+  if (Number.isNaN(parsed.getTime())) {
+    return "";
+  }
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(parsed);
 }
 
 export function TimelineSettings({
@@ -76,85 +78,64 @@ export function TimelineSettings({
   isApplying
 }: TimelineSettingsProps): JSX.Element | null {
   const [bucketMinutes, setBucketMinutes] = useState<number>(value.bucketMinutes);
-  const [datePreset, setDatePreset] = useState<DatePresetValue>("latest");
-  const [customDate, setCustomDate] = useState<string>("");
-  const [hour, setHour] = useState<number>(12);
-  const [minute, setMinute] = useState<number>(0);
-  const [meridiem, setMeridiem] = useState<"AM" | "PM">("AM");
+  const [anchorDate, setAnchorDate] = useState<string>("");
+  const [anchorTime, setAnchorTime] = useState<string>("");
+  const [isAnchored, setIsAnchored] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isOpen) {
       return;
     }
+
     setBucketMinutes(value.bucketMinutes);
-    if (!value.startCursor) {
-      setDatePreset("latest");
-      setCustomDate("");
-      const now = new Date();
-      const minutes = now.getMinutes();
-      const closestMinute = MINUTE_OPTIONS.reduce((prev, current) =>
-        Math.abs(current - minutes) < Math.abs(prev - minutes) ? current : prev
-      );
-      setMinute(closestMinute);
-      const rawHours = now.getHours();
-      const nextMeridiem: "AM" | "PM" = rawHours >= 12 ? "PM" : "AM";
-      let displayHour = rawHours % 12;
-      if (displayHour === 0) {
-        displayHour = 12;
-      }
-      setHour(displayHour);
-      setMeridiem(nextMeridiem);
-      return;
-    }
 
-    const local = new Date(value.startCursor);
-    const today = startOfLocalDay(new Date());
-    const yesterday = startOfLocalDay(addDays(today, -1));
-    const twoDaysAgo = startOfLocalDay(addDays(today, -2));
-
-    if (isSameDay(local, today)) {
-      setDatePreset("today");
-    } else if (isSameDay(local, yesterday)) {
-      setDatePreset("yesterday");
-    } else if (isSameDay(local, twoDaysAgo)) {
-      setDatePreset("twoDaysAgo");
+    const parsed = parseStartCursor(value.startCursor);
+    if (parsed) {
+      setIsAnchored(true);
+      setAnchorDate(parsed.date);
+      setAnchorTime(parsed.time);
     } else {
-      setDatePreset("custom");
-      setCustomDate(formatInputDate(local));
+      setIsAnchored(false);
+      const now = new Date();
+      setAnchorDate(formatDateInput(now));
+      setAnchorTime(formatTimeInput(now));
     }
-
-    const minutes = local.getMinutes();
-    const closestMinute = MINUTE_OPTIONS.reduce((prev, current) =>
-      Math.abs(current - minutes) < Math.abs(prev - minutes) ? current : prev
-    );
-    setMinute(closestMinute);
-
-    const rawHours = local.getHours();
-    const nextMeridiem: "AM" | "PM" = rawHours >= 12 ? "PM" : "AM";
-    let displayHour = rawHours % 12;
-    if (displayHour === 0) {
-      displayHour = 12;
-    }
-    setHour(displayHour);
-    setMeridiem(nextMeridiem);
   }, [isOpen, value.bucketMinutes, value.startCursor]);
 
-  const isCustomDateRequired = datePreset === "custom";
-  const disableTimeControls = datePreset === "latest";
-
   const canApply = useMemo(() => {
-    if (datePreset === "custom" && !customDate) {
-      return false;
+    if (!isAnchored) {
+      return true;
     }
-    return true;
-  }, [customDate, datePreset]);
+    return Boolean(anchorDate && anchorTime);
+  }, [anchorDate, anchorTime, isAnchored]);
+
+  const previewText = useMemo(() => {
+    if (isAnchored && anchorDate && anchorTime) {
+      return `Anchored at ${formatDateTimeDisplay(anchorDate, anchorTime)} · ${bucketMinutes}-minute buckets.`;
+    }
+    return `Showing the latest detections in ${bucketMinutes}-minute buckets.`;
+  }, [anchorDate, anchorTime, bucketMinutes, isAnchored]);
+
+  const lastUpdatedLabel = useMemo(() => {
+    if (!value.startCursor) {
+      return "Most recent detections";
+    }
+    const parsed = new Date(value.startCursor);
+    if (Number.isNaN(parsed.getTime())) {
+      return "Most recent detections";
+    }
+    return new Intl.DateTimeFormat(undefined, {
+      dateStyle: "medium",
+      timeStyle: "short"
+    }).format(parsed);
+  }, [value.startCursor]);
 
   const handleApply = () => {
     if (!canApply) {
       return;
     }
 
-    if (datePreset === "latest") {
+    if (!isAnchored) {
       onApply({
         bucketMinutes,
         startCursor: undefined
@@ -162,44 +143,25 @@ export function TimelineSettings({
       return;
     }
 
-    let baseDate: Date | undefined;
-    const preset = DATE_PRESETS.find((entry) => entry.value === datePreset);
-    if (preset?.offset !== undefined) {
-      baseDate = startOfLocalDay(addDays(new Date(), preset.offset));
-    } else if (datePreset === "custom") {
-      baseDate = parseCustomDate(customDate);
-    }
-
-    if (!baseDate) {
-      onApply({
-        bucketMinutes,
-        startCursor: undefined
-      });
+    const iso = buildAnchorISO(anchorDate, anchorTime);
+    if (!iso) {
       return;
     }
-
-    let hour24 = hour % 12;
-    if (meridiem === "PM") {
-      hour24 += 12;
-    }
-    if (meridiem === "AM" && hour24 === 12) {
-      hour24 = 0;
-    }
-
-    const anchor = new Date(baseDate);
-    anchor.setHours(hour24, minute, 0, 0);
 
     onApply({
       bucketMinutes,
-      startCursor: anchor.toISOString()
+      startCursor: iso
     });
   };
 
   const handleReset = () => {
-    setDatePreset("latest");
-    setCustomDate("");
+    setBucketMinutes(value.bucketMinutes);
+    setIsAnchored(false);
+    const now = new Date();
+    setAnchorDate(formatDateInput(now));
+    setAnchorTime(formatTimeInput(now));
     onApply({
-      bucketMinutes,
+      bucketMinutes: value.bucketMinutes,
       startCursor: undefined
     });
   };
@@ -207,9 +169,6 @@ export function TimelineSettings({
   if (!isOpen) {
     return null;
   }
-
-  const baseFieldClass =
-    "w-full rounded-2xl border border-brand-border bg-brand-surface px-4 py-2 text-sm font-medium text-brand-navy shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-lagoon disabled:cursor-not-allowed disabled:opacity-60";
 
   return (
     <div
@@ -220,160 +179,166 @@ export function TimelineSettings({
       onClick={onClose}
     >
       <div
-        className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-[32px] border border-brand-border bg-white p-6 shadow-card"
+        className="max-h-[90vh] w-full max-w-3xl overflow-y-auto"
         onClick={(event) => event.stopPropagation()}
       >
-        <header className="flex items-start justify-between gap-4">
-          <div>
-            <h2 id="timeline-settings-title" className="text-lg font-heading text-brand-navy">
-              Timeline settings
-            </h2>
-            <p className="mt-1 text-sm text-brand-muted">
-              Adjust the bucket size, starting date, and time used when fetching timeline detections.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-full border border-brand-border bg-white p-2 text-brand-muted transition hover:text-brand-navy focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-lagoon"
-            aria-label="Close timeline settings"
-          >
-            ×
-          </button>
-        </header>
-
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-muted" htmlFor="settings-bucket">
-              Bucket size
-            </label>
-            <select
-              id="settings-bucket"
-              className={baseFieldClass}
-              value={bucketMinutes}
-              onChange={(event) => setBucketMinutes(Number(event.target.value))}
-              disabled={isApplying}
-            >
-              {BUCKET_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}-minute buckets
-                </option>
-              ))}
-            </select>
+        <div className="relative isolate flex items-center justify-center px-4 py-10">
+          <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <div className="absolute -top-32 -left-32 h-[60vh] w-[60vh] rounded-full bg-gradient-to-br from-indigo-200 via-lime-200 to-purple-300 opacity-20 blur-2xl" />
+            <div className="absolute -bottom-20 right-10 h-[40vh] w-[50vh] rounded-full bg-gradient-to-tr from-fuchsia-300 via-orange-300 to-rose-200 opacity-40 blur-3xl" />
+            <div className="absolute top-28 left-1/4 h-[35vh] w-[45vh] rounded-full bg-gradient-to-b from-orange-300 via-amber-200 to-rose-100 opacity-60 blur-3xl" />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-muted" htmlFor="settings-date">
-              Start date
-            </label>
-            <select
-              id="settings-date"
-              className={baseFieldClass}
-              value={datePreset}
-              onChange={(event) => setDatePreset(event.target.value as DatePresetValue)}
-              disabled={isApplying}
-            >
-              {DATE_PRESETS.map((preset) => (
-                <option key={preset.value} value={preset.value}>
-                  {preset.label}
-                </option>
-              ))}
-            </select>
-            {isCustomDateRequired ? (
-              <input
-                type="date"
-                className={baseFieldClass}
-                value={customDate}
-                onChange={(event) => setCustomDate(event.target.value)}
-                disabled={isApplying}
-              />
-            ) : null}
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-muted" htmlFor="settings-hour">
-              Hour
-            </label>
-            <select
-              id="settings-hour"
-              className={baseFieldClass}
-              value={hour}
-              onChange={(event) => setHour(Number(event.target.value))}
-              disabled={disableTimeControls || isApplying}
-            >
-              {HOUR_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-            <div className="col-span-2 flex flex-col gap-2 md:col-span-2">
-              <label className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-muted" htmlFor="settings-minute">
-                Minutes
-              </label>
-              <select
-                id="settings-minute"
-                className={baseFieldClass}
-                value={minute}
-                onChange={(event) => setMinute(Number(event.target.value))}
-                disabled={disableTimeControls || isApplying}
+          <div className="w-full max-w-2xl overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-xl">
+            <header className="flex items-start justify-between border-b border-neutral-200 bg-neutral-50 px-6 py-5">
+              <div className="space-y-1">
+                <p id="timeline-settings-title" className="text-2xl font-bold text-neutral-900">
+                  Timeline Settings
+                </p>
+                <p className="text-sm text-neutral-600">
+                  Configure your timeline start date, time, and grouping interval.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-full border border-neutral-300 bg-white p-2 text-neutral-500 transition hover:text-neutral-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500"
+                aria-label="Close timeline settings"
               >
-                {MINUTE_OPTIONS.map((option) => (
-                  <option key={option} value={option}>
-                    {`${option}`.padStart(2, "0")}
-                  </option>
-                ))}
-              </select>
+                ×
+              </button>
+            </header>
+
+            <div className="space-y-8 px-6 py-8">
+              <section>
+                <p className="mb-3 text-sm font-semibold text-neutral-800">Time Grouping (Minutes)</p>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+                  {GROUPING_OPTIONS.map((option) => {
+                    const isActive = bucketMinutes === option;
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => setBucketMinutes(option)}
+                        disabled={isApplying}
+                        className={[
+                          "flex items-center justify-center rounded-xl border-2 px-4 py-4 text-center transition",
+                          "bg-neutral-50 hover:bg-neutral-100",
+                          isActive ? "border-neutral-900 text-neutral-900" : "border-neutral-200 text-neutral-600",
+                          isApplying ? "opacity-60" : ""
+                        ].join(" ")}
+                        aria-pressed={isActive}
+                      >
+                        <span className="text-center">
+                          <span className="block text-lg font-bold">{option}</span>
+                          <span className="mt-1 block text-xs text-neutral-500">min</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+
+              <section className="space-y-4">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold text-neutral-800">Timeline Start</p>
+                  <label className="flex items-center gap-2 text-xs font-medium text-neutral-600">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-neutral-300 text-neutral-800 focus:ring-neutral-500"
+                      checked={isAnchored}
+                      onChange={(event) => setIsAnchored(event.target.checked)}
+                      disabled={isApplying}
+                    />
+                    Pin to specific date &amp; time
+                  </label>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="timeline-start-date" className="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
+                      Date
+                    </label>
+                    <input
+                      id="timeline-start-date"
+                      type="date"
+                      value={anchorDate}
+                      onChange={(event) => setAnchorDate(event.target.value)}
+                      disabled={!isAnchored || isApplying}
+                      className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-800 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 disabled:cursor-not-allowed disabled:opacity-60"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="timeline-start-time" className="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
+                      Time (24-hour)
+                    </label>
+                    <input
+                      id="timeline-start-time"
+                      type="time"
+                      value={anchorTime}
+                      onChange={(event) => setAnchorTime(event.target.value)}
+                      disabled={!isAnchored || isApplying}
+                      className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 text-sm font-medium text-neutral-800 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 disabled:cursor-not-allowed disabled:opacity-60"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-neutral-500">
+                  Leave the toggle off to stream the newest detections. Enable it to review a specific point in time.
+                </p>
+              </section>
+
+              <section className="rounded-xl border border-neutral-200 bg-neutral-50 p-5">
+                <div className="flex items-start gap-3">
+                  <span className="mt-1 text-neutral-500">
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="h-5 w-5"
+                    >
+                      <path
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-neutral-800">Timeline Preview</p>
+                    <p className="mt-1 text-xs text-neutral-600">{previewText}</p>
+                  </div>
+                </div>
+              </section>
             </div>
-            <div className="col-span-2 flex flex-col gap-2 md:col-span-2">
-              <label className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-muted" htmlFor="settings-meridiem">
-                AM / PM
-              </label>
-              <select
-                id="settings-meridiem"
-                className={baseFieldClass}
-                value={meridiem}
-                onChange={(event) => setMeridiem(event.target.value as "AM" | "PM")}
-                disabled={disableTimeControls || isApplying}
-              >
-                <option value="AM">AM</option>
-                <option value="PM">PM</option>
-              </select>
-            </div>
+
+            <footer className="flex flex-col gap-3 border-t border-neutral-200 bg-neutral-50 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="text-xs text-neutral-500">
+                Last applied anchor:
+                <span className="ml-1 font-medium text-neutral-700">{lastUpdatedLabel}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={isApplying}
+                >
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApply}
+                  className="rounded-lg bg-neutral-900 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-600 disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={!canApply || isApplying}
+                >
+                  Apply Settings
+                </button>
+              </div>
+            </footer>
           </div>
         </div>
-
-        <footer className="mt-8 flex flex-wrap items-center justify-between gap-3">
-          <button
-            type="button"
-            onClick={handleReset}
-            className="rounded-full border border-brand-border bg-white px-5 py-2 text-sm font-semibold text-brand-navy transition hover:bg-brand-surface disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={isApplying}
-          >
-            Reset to latest
-          </button>
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="rounded-full border border-brand-border bg-white px-5 py-2 text-sm font-semibold text-brand-muted transition hover:bg-brand-surface disabled:cursor-not-allowed disabled:opacity-60"
-              disabled={isApplying}
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleApply}
-              className="rounded-full bg-brand-lagoon px-6 py-2 text-sm font-semibold text-white shadow-card transition hover:bg-brand-navy disabled:cursor-not-allowed disabled:opacity-60"
-              disabled={!canApply || isApplying}
-            >
-              Apply settings
-            </button>
-          </div>
-        </footer>
       </div>
     </div>
   );

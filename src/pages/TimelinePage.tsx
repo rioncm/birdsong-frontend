@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 
 import { TimelineBucketCard } from "../components/TimelineBucketCard";
 import { TimelineSettings, type TimelineSettingsValue } from "../components/TimelineSettings";
-import { DEFAULT_BUCKET_MINUTES, useQuarterPresets, useTimeline } from "../hooks/useTimeline";
+import { useQuarterPresets, useTimeline } from "../hooks/useTimeline";
+import { useUserPreferences } from "../hooks/useUserPreferences";
 
 function formatDateParam(iso?: string | null): string | undefined {
   if (!iso) {
@@ -19,13 +20,21 @@ function formatDateParam(iso?: string | null): string | undefined {
 }
 
 export function TimelinePage(): JSX.Element {
-  const [settingsValue, setSettingsValue] = useState<TimelineSettingsValue>({
-    bucketMinutes: DEFAULT_BUCKET_MINUTES,
-    startCursor: undefined
-  });
+  const { preferences, updateTimeline } = useUserPreferences();
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
 
-  const quartersDateParam = useMemo(() => formatDateParam(settingsValue.startCursor), [settingsValue.startCursor]);
+  const timelineSettingsValue: TimelineSettingsValue = useMemo(
+    () => ({
+      bucketMinutes: preferences.timeline.bucketMinutes,
+      startCursor: preferences.timeline.startCursor ?? undefined
+    }),
+    [preferences.timeline.bucketMinutes, preferences.timeline.startCursor]
+  );
+
+  const quartersDateParam = useMemo(
+    () => formatDateParam(timelineSettingsValue.startCursor),
+    [timelineSettingsValue.startCursor]
+  );
 
   const {
     data,
@@ -35,8 +44,8 @@ export function TimelinePage(): JSX.Element {
     isFetchingNextPage,
     error
   } = useTimeline({
-    bucketMinutes: settingsValue.bucketMinutes,
-    startCursor: settingsValue.startCursor
+    bucketMinutes: timelineSettingsValue.bucketMinutes,
+    startCursor: timelineSettingsValue.startCursor
   });
   const { data: quarters } = useQuarterPresets(quartersDateParam);
 
@@ -48,21 +57,24 @@ export function TimelinePage(): JSX.Element {
   }, [data]);
 
   const handleApplySettings = (nextValue: TimelineSettingsValue) => {
-    setSettingsValue(nextValue);
+    updateTimeline({
+      bucketMinutes: nextValue.bucketMinutes,
+      startCursor: nextValue.startCursor ?? null
+    });
     setSettingsOpen(false);
   };
 
   const summaryText = useMemo(() => {
-    if (!settingsValue.startCursor) {
-      return `Showing the latest detections in ${settingsValue.bucketMinutes}-minute buckets.`;
+    if (!timelineSettingsValue.startCursor) {
+      return `Showing the latest detections in ${timelineSettingsValue.bucketMinutes}-minute buckets.`;
     }
-    const local = new Date(settingsValue.startCursor);
+    const local = new Date(timelineSettingsValue.startCursor);
     const formatter = new Intl.DateTimeFormat(undefined, {
       dateStyle: "medium",
       timeStyle: "short"
     });
-    return `Anchored at ${formatter.format(local)} · ${settingsValue.bucketMinutes}-minute buckets.`;
-  }, [settingsValue.bucketMinutes, settingsValue.startCursor]);
+    return `Anchored at ${formatter.format(local)} · ${timelineSettingsValue.bucketMinutes}-minute buckets.`;
+  }, [timelineSettingsValue.bucketMinutes, timelineSettingsValue.startCursor]);
 
   return (
     <div className="space-y-6">
@@ -133,7 +145,7 @@ export function TimelinePage(): JSX.Element {
 
       <TimelineSettings
         isOpen={isSettingsOpen}
-        value={settingsValue}
+        value={timelineSettingsValue}
         onApply={handleApplySettings}
         onClose={() => setSettingsOpen(false)}
         isApplying={isLoading && !data}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+              <html><head>
+      <meta content="width=device-width, initial-scale=1" name="viewport">
+      <link href="https://fonts.googleapis.com/css2?family=Montserrat&amp;display=swap" rel="stylesheet">
+      <link rel="preconnect" href="https://fonts.gstatic.com">
+      <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&amp;display=swap" rel="stylesheet">
+      <link rel="preconnect" href="https://fonts.gstatic.com">
+      <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans&amp;family=Raleway:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
+      <link rel="preconnect" href="https://fonts.gstatic.com">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" integrity="sha512-apX8rFN/KxJW8rniQbkvzrshQ3KvyEH+4szT3Sno5svdr6E/CP0QE862yEeLBMUnCqLko8QaugGkzvWS7uNfFQ==" crossorigin="anonymous">
+      <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+      
+      <meta charset="UTF-8">
+      
+    
+     <script>
+        if (tailwind && tailwind.config) {
+            tailwind.config = {
+                ...tailwind.config,
+                darkMode: "class",
+            };
+        } else {
+            tailwind.config = {
+            darkMode: "class"
+            }
+        }
+    </script>
+  </head>
+  <body>
+    <div class="bg-white dark:bg-neutral-950 text-gray-800 dark:text-neutral-100 antialiased">
+  <div class="items-center justify-center px-4 py-12 bg-white dark:bg-neutral-950 relative isolate min-h-screen flex">
+    <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div class="h-[60vh] w-[60vh] rounded-full bg-gradient-to-br absolute -top-32 -left-32 from-indigo-200
+          via-lime-200 to-purple-300 opacity-20 blur-2xl dark:opacity-0"></div>
+      <div class="h-[40vh] w-[50vh] rounded-full bg-gradient-to-tr absolute -bottom-20 right-10 from-fuchsia-300
+          via-orange-300 to-rose-200 opacity-40 blur-3xl dark:opacity-0"></div>
+      <div class="h-[35vh] w-[45vh] rounded-full bg-gradient-to-b dark:h-[28vh] absolute top-28 left-1/4 from-orange-300
+          via-amber-200 to-rose-100 opacity-60 blur-3xl dark:from-orange-600 dark:via-amber-500 dark:to-rose-400
+          dark:opacity-64"></div>
+    </div>
+    <div class="w-full bg-white dark:bg-neutral-900 rounded-2xl shadow-xl max-w-2xl border border-neutral-200
+        dark:border-neutral-800 overflow-hidden">
+      <div class="px-6 py-5 bg-neutral-50 dark:bg-neutral-800 border-b border-neutral-200 dark:border-neutral-800">
+        <p class="text-2xl font-bold text-gray-900 dark:text-neutral-100">Timeline Settings</p>
+        <p class="text-sm text-gray-600 mt-1 dark:text-neutral-400">Configure your timeline start date, time, and
+            grouping interval</p>
+      </div>
+      <div class="px-6 py-8 space-y-8">
+        <div class="space-y-6">
+          <div>
+            <label class="text-sm font-semibold text-gray-800 mb-3 block dark:text-neutral-200">Time Grouping
+                (Minutes)</label>
+            <div class="grid grid-cols-5 gap-3">
+              <label class="items-center justify-center bg-neutral-50 dark:bg-neutral-800 rounded-lg flex p-4 border-2
+                  border-neutral-800 dark:border-neutral-200 cursor-pointer hover:bg-neutral-100
+                  dark:hover:bg-neutral-750 transition-colors">
+                <input name="timeGrouping" value="5" checked="" type="radio" class="sr-only peer">
+                <span class="text-center">
+                  <span class="text-lg font-bold text-gray-800 block dark:text-neutral-200">5</span>
+                  <span class="text-xs text-gray-500 mt-1 block dark:text-neutral-400">min</span>
+                </span>
+              </label>
+              <label class="items-center justify-center bg-neutral-50 dark:bg-neutral-800 rounded-lg flex p-4 border-2
+                  border-neutral-200 dark:border-neutral-700 cursor-pointer hover:bg-neutral-100
+                  dark:hover:bg-neutral-750 transition-colors has-[:checked]:border-neutral-800
+                  has-[:checked]:dark:border-neutral-200">
+                <input name="timeGrouping" value="10" type="radio" class="sr-only peer">
+                <span class="text-center">
+                  <span class="text-lg font-bold text-gray-800 block dark:text-neutral-200">10</span>
+                  <span class="text-xs text-gray-500 mt-1 block dark:text-neutral-400">min</span>
+                </span>
+              </label>
+              <label class="items-center justify-center bg-neutral-50 dark:bg-neutral-800 rounded-lg flex p-4 border-2
+                  border-neutral-200 dark:border-neutral-700 cursor-pointer hover:bg-neutral-100
+                  dark:hover:bg-neutral-750 transition-colors has-[:checked]:border-neutral-800
+                  has-[:checked]:dark:border-neutral-200">
+                <input name="timeGrouping" value="20" type="radio" class="sr-only peer">
+                <span class="text-center">
+                  <span class="text-lg font-bold text-gray-800 block dark:text-neutral-200">20</span>
+                  <span class="text-xs text-gray-500 mt-1 block dark:text-neutral-400">min</span>
+                </span>
+              </label>
+              <label class="items-center justify-center bg-neutral-50 dark:bg-neutral-800 rounded-lg flex p-4 border-2
+                  border-neutral-200 dark:border-neutral-700 cursor-pointer hover:bg-neutral-100
+                  dark:hover:bg-neutral-750 transition-colors has-[:checked]:border-neutral-800
+                  has-[:checked]:dark:border-neutral-200">
+                <input name="timeGrouping" value="30" type="radio" class="sr-only peer">
+                <span class="text-center">
+                  <span class="text-lg font-bold text-gray-800 block dark:text-neutral-200">30</span>
+                  <span class="text-xs text-gray-500 mt-1 block dark:text-neutral-400">min</span>
+                </span>
+              </label>
+              <label class="items-center justify-center bg-neutral-50 dark:bg-neutral-800 rounded-lg flex p-4 border-2
+                  border-neutral-200 dark:border-neutral-700 cursor-pointer hover:bg-neutral-100
+                  dark:hover:bg-neutral-750 transition-colors has-[:checked]:border-neutral-800
+                  has-[:checked]:dark:border-neutral-200">
+                <input name="timeGrouping" value="60" type="radio" class="sr-only peer">
+                <span class="text-center">
+                  <span class="text-lg font-bold text-gray-800 block dark:text-neutral-200">60</span>
+                  <span class="text-xs text-gray-500 mt-1 block dark:text-neutral-400">min</span>
+                </span>
+              </label>
+            </div>
+          </div>
+          <div>
+            <label class="text-sm font-semibold text-gray-800 mb-3 block dark:text-neutral-200">Timeline Start
+                Date</label>
+            <input value="2023-12-31" type="date" class="border border-neutral-300 dark:border-neutral-700
+                dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-500 dark:focus:ring-neutral-600
+                focus:border-transparent transition-all w-full px-4 py-3 bg-white dark:bg-neutral-800 rounded-lg
+                text-gray-800">
+          </div>
+          <div>
+            <label class="text-sm font-semibold text-gray-800 mb-3 block dark:text-neutral-200">Timeline Start Time
+                (24-hour format)</label>
+            <input value="00:00" type="time" class="border border-neutral-300 dark:border-neutral-700
+                dark:text-neutral-200 focus:outline-none focus:ring-2 focus:ring-neutral-500 dark:focus:ring-neutral-600
+                focus:border-transparent transition-all w-full px-4 py-3 bg-white dark:bg-neutral-800 rounded-lg
+                text-gray-800">
+          </div>
+          <div class="bg-neutral-50 dark:bg-neutral-800 rounded-lg p-5 border border-neutral-200
+              dark:border-neutral-700">
+            <div class="items-start flex space-x-3">
+              <div class="mt-1 flex-shrink-0">
+                <svg class="w-5 h-5 text-neutral-600 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_4dVGKS8ca">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-semibold text-gray-800 mb-1 dark:text-neutral-200">Timeline Preview</p>
+                <p class="text-xs text-gray-600 dark:text-neutral-400">
+                  <span class="font-semibold text-gray-800 dark:text-neutral-200">00:00</span>
+                  <span class="font-semibold text-gray-800 dark:text-neutral-200">December 31, 2023</span>
+                  <span class="font-semibold text-gray-800 dark:text-neutral-200">5-minute</span>
+                  <span>with events grouped in</span>
+                  <span>intervals.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="px-6 py-4 bg-neutral-50 dark:bg-neutral-800 sm:flex-row sm:items-center sm:justify-between border-t
+          border-neutral-200 dark:border-neutral-800 flex flex-col gap-3">
+        <div class="text-xs text-gray-500 dark:text-neutral-400">
+          Last updated:
+          <span class="font-medium text-gray-700 dark:text-neutral-300">December 31, 2023 at 00:00</span>
+        </div>
+        <div class="items-center flex gap-3">
+          <button type="submit" class="dark:text-neutral-300 border border-neutral-300 dark:border-neutral-600
+              hover:bg-neutral-100 dark:hover:bg-neutral-600 focus:outline-none focus:ring-2 focus:ring-neutral-500
+              dark:focus:ring-neutral-600 transition-all px-5 py-2.5 text-sm font-medium text-gray-700 bg-white
+              dark:bg-neutral-700 rounded-lg">Reset</button>
+          <button type="submit" class="dark:text-neutral-900 hover:bg-neutral-900 dark:hover:bg-neutral-300
+              focus:outline-none focus:ring-2 focus:ring-neutral-500 dark:focus:ring-neutral-600 transition-all px-5
+              py-2.5 text-sm font-medium text-white bg-neutral-800 dark:bg-neutral-200 rounded-lg">Apply
+              Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  
+
+          </body></html>
