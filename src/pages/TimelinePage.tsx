@@ -93,18 +93,8 @@ export function TimelinePage(): JSX.Element {
             className="flex items-center gap-2 rounded-full border border-brand-border bg-white px-4 py-2 text-sm font-semibold text-brand-navy shadow-card-sm transition hover:bg-brand-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-lagoon"
             aria-label="Open timeline settings"
           >
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="none"
-              className="h-5 w-5 text-brand-navy"
-            >
-              <path
-                d="M12 9.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5ZM4.75 12a7.25 7.25 0 0 1 12.87-4.68l1.54-.89a.75.75 0 0 1 1.13.66v5.1a.75.75 0 0 1-.37.65l-4.41 2.55a.75.75 0 0 1-1.13-.65v-2.03a4.75 4.75 0 1 1-8.63-2.67ZM19.25 12v3.19a.75.75 0 0 1-1.13.66l-1.54-.9A7.25 7.25 0 0 1 4.75 12"
-                fill="currentColor"
-              />
-            </svg>
-            <span className="hidden sm:inline">Settings</span>
+            
+            <span className="material-symbols-outlined hidden sm:inline">Settings</span>
           </button>
         </div>
       </section>
