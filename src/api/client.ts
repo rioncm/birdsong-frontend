@@ -17,8 +17,13 @@ export async function fetchTimeline(params: {
   before?: string;
   after?: string;
 }): Promise<DetectionTimelineResponse> {
+  const { bucketMinutes, ...rest } = params;
+  const queryParams = {
+    ...rest,
+    ...(typeof bucketMinutes === "number" ? { bucket_minutes: bucketMinutes } : {})
+  };
   const response = await http.get<DetectionTimelineResponse>("/detections/timeline", {
-    params
+    params: queryParams
   });
   return response.data;
 }
