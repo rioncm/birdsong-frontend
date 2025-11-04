@@ -93,8 +93,8 @@ export function TimelinePage(): JSX.Element {
             className="flex items-center gap-2 rounded-full border border-brand-border bg-white px-4 py-2 text-sm font-semibold text-brand-navy shadow-card-sm transition hover:bg-brand-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-lagoon"
             aria-label="Open timeline settings"
           >
-            
-            <span className="material-symbols-outlined hidden sm:inline">Settings</span>
+            <span className="material-icons text-brand-navy" aria-hidden="true">settings</span>
+            <span className="hidden sm:inline">Settings</span>
           </button>
         </div>
       </section>
