@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
+import { AdminAuthProvider } from "./context/AdminAuthContext";
 import "./index.css";
 import { startMockWorker } from "./mocks/browser";
 
@@ -20,7 +21,9 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <AdminAuthProvider>
+        <App />
+      </AdminAuthProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

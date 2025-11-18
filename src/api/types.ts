@@ -61,3 +61,36 @@ export interface QuarterPresetsResponse {
   current_label?: string | null;
   quarters: QuarterWindow[];
 }
+
+export interface SettingValueResponse {
+  key: string;
+  label?: string | null;
+  description?: string | null;
+  data_type: string;
+  value: unknown;
+  scope: string;
+  scope_ref?: string | null;
+  editable: boolean;
+  sensitive: boolean;
+}
+
+export interface SettingDefinitionGroup {
+  category: string;
+  settings: SettingValueResponse[];
+}
+
+export interface BootstrapStateResponse {
+  state: Record<string, unknown>;
+}
+
+export interface CredentialRequest {
+  api_key?: string;
+  headers?: Record<string, string>;
+  expires_at?: string | null;
+}
+
+export interface DataSourceResponse {
+  name: string;
+  title?: string;
+  active?: boolean;
+}

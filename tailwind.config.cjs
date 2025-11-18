@@ -16,6 +16,10 @@ module.exports = {
           leaf: "#A3B557",
           sunset: "#DB793D",
           amber: "#E8A751",
+          signal: {
+            error: "#C7504E",
+            success: "#3E8C6D"
+          }
         }
       },
       fontFamily: {
