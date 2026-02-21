@@ -1,0 +1,379 @@
+import React from "react";
+
+const UserProfilePage: React.FC = () =&gt; (
+  &lt;&gt;
+    <div classname="bg-white dark:bg-neutral-950 text-gray-800 dark:text-neutral-100 antialiased">
+      <div classname="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div classname="h-[60vh] w-[60vh] rounded-full bg-gradient-to-br absolute -top-32 -left-32 from-indigo-200 via-lime-200
+        to-purple-300 opacity-20 blur-2xl dark:opacity-0"></div>
+        <div classname="h-[40vh] w-[50vh] rounded-full bg-gradient-to-tr absolute -bottom-20 right-10 from-fuchsia-300
+        via-orange-300 to-rose-200 opacity-40 blur-3xl dark:opacity-0"></div>
+        <div classname="h-[35vh] w-[45vh] rounded-full bg-gradient-to-b dark:h-[28vh] absolute top-28 left-1/4 from-orange-300
+        via-amber-200 to-rose-100 opacity-60 blur-3xl dark:from-orange-600 dark:via-amber-500 dark:to-rose-400
+        dark:opacity-64"></div>
+      </div>
+      <div classname="relative isolate min-h-screen">
+        <div classname="flex min-h-screen">
+          <aside classname="w-64 bg-white dark:bg-neutral-900 lg:block h-screen border-r border-neutral-200
+          dark:border-neutral-800 hidden sticky top-0">
+            <div classname="p-6">
+              <div classname="items-center mb-8 flex gap-3">
+                <div classname="w-10 h-10 bg-gradient-to-br rounded-lg from-neutral-800 to-neutral-600 dark:from-neutral-200
+                dark:to-neutral-400"></div>
+                <span classname="text-lg font-semibold text-gray-800 dark:text-neutral-100">Dashboard</span>
+              </div>
+              <nav classname="space-y-2">
+                <a href="/lTM5NDiyrQK16APQ2Z6h#" classname="items-center px-4 py-3 rounded-lg bg-neutral-100 dark:bg-neutral-800
+                text-gray-800 font-medium flex gap-3 dark:text-neutral-100">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_WZs2ihlpH">
+                <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+                  <span>Profile</span>
+                </a>
+                <a href="/lTM5NDiyrQK16APQ2Z6h#" classname="items-center px-4 py-3 rounded-lg text-gray-600 flex gap-3
+                dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_8TqV3DEIs">
+                <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+                  <span>Notifications</span>
+                </a>
+                <a href="/lTM5NDiyrQK16APQ2Z6h#" classname="items-center px-4 py-3 rounded-lg text-gray-600 flex gap-3
+                dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_vE0HFmVsD">
+                <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+                  <span>Settings</span>
+                </a>
+              </nav>
+            </div>
+          </aside>
+          <main classname="flex-1 overflow-x-hidden">
+            <div classname="mx-auto px-6 py-8 lg:px-8 lg:py-12 max-w-5xl">
+              <div classname="mb-8">
+                <h1 classname="text-3xl font-bold text-gray-800 mb-2 dark:text-neutral-100">User Profile</h1>
+                <p classname="text-gray-600 dark:text-neutral-400">Manage your profile information and notification
+                  preferences</p>
+              </div>
+              <div classname="bg-white/70 dark:bg-neutral-950 shadow-xl rounded-2xl mb-8 ring-1 ring-neutral-200/50
+                  dark:ring-neutral-700/50 border border-neutral-200/70 dark:border-neutral-800/70 p-8">
+                <div classname="bg-gradient-to-b mb-6 from-transparent via-neutral-50/50 dark:via-neutral-900/50 to-transparent
+                    p-6 -m-8">
+                  <div classname="bg-white dark:bg-neutral-900 rounded-2xl shadow-xl shadow-black/10 ring-neutral-300/50
+                      dark:ring-neutral-600/50 border border-neutral-200 dark:border-neutral-700 p-6 ring-1">
+                    <h2 classname="text-xl font-semibold text-gray-800 mb-6 dark:text-neutral-100">Personal Information</h2>
+                    <div classname="space-y-6">
+                      <div classname="group">
+                        <label classname="text-sm font-medium text-gray-700 mb-2 block dark:text-neutral-300">First Name</label>
+                        <div classname="relative">
+                          <input value="John" type="text" classname="border border-neutral-200 dark:border-neutral-700
+                          dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-400
+                          dark:focus:ring-neutral-600 transition-all w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-800
+                          rounded-lg text-gray-800" />
+                          <button type="submit" classname="absolute right-3 top-1/2 -translate-y-1/2 opacity-0
+                          group-hover:opacity-100 transition-opacity">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_tMLQvmtCX">
+                          <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div classname="group">
+                        <label classname="text-sm font-medium text-gray-700 mb-2 block dark:text-neutral-300">Last Name</label>
+                        <div classname="relative">
+                          <input value="Doe" type="text" classname="border border-neutral-200 dark:border-neutral-700
+                          dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-400
+                          dark:focus:ring-neutral-600 transition-all w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-800
+                          rounded-lg text-gray-800" />
+                          <button type="submit" classname="absolute right-3 top-1/2 -translate-y-1/2 opacity-0
+                          group-hover:opacity-100 transition-opacity">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_4kU65XTBM">
+                          <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div classname="group">
+                        <label classname="text-sm font-medium text-gray-700 mb-2 block dark:text-neutral-300">Email</label>
+                        <div classname="relative">
+                          <input value="john.doe@example.com" type="email" classname="border border-neutral-200
+                          dark:border-neutral-700 dark:text-neutral-100 focus:outline-none focus:ring-2
+                          focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-all w-full px-4 py-3
+                          bg-neutral-50 dark:bg-neutral-800 rounded-lg text-gray-800" />
+                          <button type="submit" classname="absolute right-3 top-1/2 -translate-y-1/2 opacity-0
+                          group-hover:opacity-100 transition-opacity">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_kgCRR3G28">
+                          <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div classname="group">
+                        <label classname="text-sm font-medium text-gray-700 mb-2 block dark:text-neutral-300">Telegram</label>
+                        <div classname="relative">
+                          <input value="@johndoe" type="text" classname="border border-neutral-200 dark:border-neutral-700
+                          dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-400
+                          dark:focus:ring-neutral-600 transition-all w-full px-4 py-3 bg-neutral-50 dark:bg-neutral-800
+                          rounded-lg text-gray-800" />
+                          <button type="submit" classname="absolute right-3 top-1/2 -translate-y-1/2 opacity-0
+                          group-hover:opacity-100 transition-opacity">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_PHRLMnMc5">
+                          <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                          </button>
+                        </div>
+                      </div>
+                      <div classname="group">
+                        <label classname="text-sm font-medium text-gray-700 mb-2 block dark:text-neutral-300">Cell
+                        Number</label>
+                        <div classname="relative">
+                          <input value="+1 (555) 123-4567" type="tel" classname="border border-neutral-200
+                          dark:border-neutral-700 dark:text-neutral-100 focus:outline-none focus:ring-2
+                          focus:ring-neutral-400 dark:focus:ring-neutral-600 transition-all w-full px-4 py-3
+                          bg-neutral-50 dark:bg-neutral-800 rounded-lg text-gray-800" />
+                          <button type="submit" classname="absolute right-3 top-1/2 -translate-y-1/2 opacity-0
+                          group-hover:opacity-100 transition-opacity">
+                            <svg class="w-5 h-5 text-gray-600 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_toyiEtJwG">
+                          <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div classname="mt-8 justify-end flex">
+                      <button type="submit" classname="dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-300
+                      transition-colors px-6 py-3 bg-neutral-800 dark:bg-neutral-200 text-white rounded-lg font-medium
+                      shadow-lg">Save Changes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div classname="mb-8">
+                <div classname="items-center justify-between mb-6 flex">
+                  <div>
+                    <h2 classname="text-2xl font-bold text-gray-800 mb-1 dark:text-neutral-100">My Notifications</h2>
+                    <p classname="text-gray-600 dark:text-neutral-400">Manage your notification rules and channels</p>
+                  </div>
+                  <button type="submit" classname="dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-300
+                  transition-colors px-4 py-2 bg-neutral-800 dark:bg-neutral-200 text-white rounded-lg font-medium
+                  text-sm">+ Add Rule</button>
+                </div>
+                <div classname="space-y-4">
+                  <div classname="bg-white/70 dark:bg-neutral-950 shadow-xl rounded-2xl ring-1 ring-neutral-200/50
+                  dark:ring-neutral-700/50 border border-neutral-200/70 dark:border-neutral-800/70 p-6">
+                    <div classname="bg-gradient-to-b from-transparent via-neutral-50/50 dark:via-neutral-900/50 to-transparent
+                        p-6 -m-6">
+                      <div classname="bg-white dark:bg-neutral-900 rounded-2xl shadow-xl shadow-black/10 ring-neutral-300/50
+                          dark:ring-neutral-600/50 border border-neutral-200 dark:border-neutral-700 p-6 ring-1">
+                        <div classname="items-start justify-between flex gap-4">
+                          <div classname="flex-1">
+                            <div classname="mb-4">
+                              <span classname="items-center px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 text-gray-800
+                              rounded-lg font-semibold text-sm inline-flex gap-2 dark:text-neutral-100 border
+                              border-neutral-200 dark:border-neutral-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_LHkbl9Tm0">
+                              <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                                Bird Species Alert
+                              </span>
+                            </div>
+                            <div classname="mb-6">
+                              <p classname="text-gray-700 text-base leading-relaxed dark:text-neutral-300">Notify me when a rare
+                              bird species is detected within 50 miles of my location. This includes endangered species
+                              and uncommon migratory birds passing through the region.</p>
+                            </div>
+                            <div classname="items-center flex gap-4">
+                              <span classname="text-sm font-medium text-gray-600 dark:text-neutral-400">Channels:</span>
+                              <div classname="items-center flex gap-3">
+                                <button title="Click to toggle the channel on or off" type="submit" classname="group relative">
+                                  <svg class="w-8 h-8 text-blue-500 hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" id="Windframe_bmFqAWNYt">
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"></path>
+                              </svg>
+                                  <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                                  absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                                  group-hover:opacity-100 transition-opacity whitespace-nowrap
+                                  pointer-events-none">Click to toggle the channel on or off</div>
+                                </button>
+                                <button title="Click to toggle the channel on or off" type="submit" classname="group relative">
+                                  <svg class="w-8 h-8 text-green-500 hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" id="Windframe_dSATllkwo">
+                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path>
+                              </svg>
+                                  <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                                  absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                                  group-hover:opacity-100 transition-opacity whitespace-nowrap
+                                  pointer-events-none">Click to toggle the channel on or off</div>
+                                </button>
+                                <button title="Click to toggle the channel on or off" type="submit" classname="group relative">
+                                  <svg class="w-8 h-8 text-gray-400 dark:text-neutral-600 hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" id="Windframe_2JkdOUMaj">
+                                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+                              </svg>
+                                  <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                                  absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                                  group-hover:opacity-100 transition-opacity whitespace-nowrap
+                                  pointer-events-none">Click to toggle the channel on or off</div>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <button title="Delete notification rule" type="submit" classname="group relative flex-shrink-0">
+                            <svg class="w-6 h-6 text-gray-400 dark:text-neutral-500 hover:text-red-500 dark:hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_nkkcEw3Ae">
+                          <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                            <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                            absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                            group-hover:opacity-100 transition-opacity whitespace-nowrap
+                            pointer-events-none">Delete</div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div classname="bg-white/70 dark:bg-neutral-950 shadow-xl rounded-2xl ring-1 ring-neutral-200/50
+                  dark:ring-neutral-700/50 border border-neutral-200/70 dark:border-neutral-800/70 p-6">
+                    <div classname="bg-gradient-to-b from-transparent via-neutral-50/50 dark:via-neutral-900/50 to-transparent
+                        p-6 -m-6">
+                      <div classname="bg-white dark:bg-neutral-900 rounded-2xl shadow-xl shadow-black/10 ring-neutral-300/50
+                          dark:ring-neutral-600/50 border border-neutral-200 dark:border-neutral-700 p-6 ring-1">
+                        <div classname="items-start justify-between flex gap-4">
+                          <div classname="flex-1">
+                            <div classname="mb-4">
+                              <span classname="items-center px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 text-gray-800
+                              rounded-lg font-semibold text-sm inline-flex gap-2 dark:text-neutral-100 border
+                              border-neutral-200 dark:border-neutral-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_TtkQ6reRd">
+                              <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                                Mammal Sighting
+                              </span>
+                            </div>
+                            <div classname="mb-6">
+                              <p classname="text-gray-700 text-base leading-relaxed dark:text-neutral-300">Alert me immediately
+                              when large mammals such as bears, wolves, or mountain lions are spotted near hiking trails
+                              I have favorited. Priority notifications for safety-critical sightings.</p>
+                            </div>
+                            <div classname="items-center flex gap-4">
+                              <span classname="text-sm font-medium text-gray-600 dark:text-neutral-400">Channels:</span>
+                              <div classname="items-center flex gap-3">
+                                <button title="Click to toggle the channel on or off" type="submit" classname="group relative">
+                                  <svg class="w-8 h-8 text-blue-500 hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" id="Windframe_soI1tXbzM">
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"></path>
+                              </svg>
+                                  <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                                  absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                                  group-hover:opacity-100 transition-opacity whitespace-nowrap
+                                  pointer-events-none">Click to toggle the channel on or off</div>
+                                </button>
+                                <button title="Click to toggle the channel on or off" type="submit" classname="group relative">
+                                  <svg class="w-8 h-8 text-green-500 hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" id="Windframe_TUnZF4GWC">
+                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path>
+                              </svg>
+                                  <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                                  absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                                  group-hover:opacity-100 transition-opacity whitespace-nowrap
+                                  pointer-events-none">Click to toggle the channel on or off</div>
+                                </button>
+                                <button title="Click to toggle the channel on or off" type="submit" classname="group relative">
+                                  <svg class="w-8 h-8 text-red-500 hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" id="Windframe_h2uxzCcEW">
+                                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+                              </svg>
+                                  <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                                  absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                                  group-hover:opacity-100 transition-opacity whitespace-nowrap
+                                  pointer-events-none">Click to toggle the channel on or off</div>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <button title="Delete notification rule" type="submit" classname="group relative flex-shrink-0">
+                            <svg class="w-6 h-6 text-gray-400 dark:text-neutral-500 hover:text-red-500 dark:hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_b2WMvFh6j">
+                          <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                            <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                            absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                            group-hover:opacity-100 transition-opacity whitespace-nowrap
+                            pointer-events-none">Delete</div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div classname="bg-white/70 dark:bg-neutral-950 shadow-xl rounded-2xl ring-1 ring-neutral-200/50
+                  dark:ring-neutral-700/50 border border-neutral-200/70 dark:border-neutral-800/70 p-6">
+                    <div classname="bg-gradient-to-b from-transparent via-neutral-50/50 dark:via-neutral-900/50 to-transparent
+                        p-6 -m-6">
+                      <div classname="bg-white dark:bg-neutral-900 rounded-2xl shadow-xl shadow-black/10 ring-neutral-300/50
+                          dark:ring-neutral-600/50 border border-neutral-200 dark:border-neutral-700 p-6 ring-1">
+                        <div classname="items-start justify-between flex gap-4">
+                          <div classname="flex-1">
+                            <div classname="mb-4">
+                              <span classname="items-center px-3 py-1.5 bg-neutral-100 dark:bg-neutral-800 text-gray-800
+                              rounded-lg font-semibold text-sm inline-flex gap-2 dark:text-neutral-100 border
+                              border-neutral-200 dark:border-neutral-700">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_4THRlfhTg">
+                              <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                                Reptile &amp; Amphibian
+                              </span>
+                            </div>
+                            <div classname="mb-6">
+                              <p classname="text-gray-700 text-base leading-relaxed dark:text-neutral-300">Send me weekly digest
+                              emails summarizing all reptile and amphibian species reported in my region. Include photos
+                              and observation notes from the community for educational purposes.</p>
+                            </div>
+                            <div classname="items-center flex gap-4">
+                              <span classname="text-sm font-medium text-gray-600 dark:text-neutral-400">Channels:</span>
+                              <div classname="items-center flex gap-3">
+                                <button title="Click to toggle the channel on or off" type="submit" classname="group relative">
+                                  <svg class="w-8 h-8 text-gray-400 dark:text-neutral-600 hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" id="Windframe_8JfvJTiZS">
+                                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"></path>
+                              </svg>
+                                  <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                                  absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                                  group-hover:opacity-100 transition-opacity whitespace-nowrap
+                                  pointer-events-none">Click to toggle the channel on or off</div>
+                                </button>
+                                <button title="Click to toggle the channel on or off" type="submit" classname="group relative">
+                                  <svg class="w-8 h-8 text-gray-400 dark:text-neutral-600 hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" id="Windframe_N0MXuxHAZ">
+                                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"></path>
+                              </svg>
+                                  <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                                  absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                                  group-hover:opacity-100 transition-opacity whitespace-nowrap
+                                  pointer-events-none">Click to toggle the channel on or off</div>
+                                </button>
+                                <button title="Click to toggle the channel on or off" type="submit" classname="group relative">
+                                  <svg class="w-8 h-8 text-red-500 hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24" id="Windframe_RrrSim6xW">
+                                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+                              </svg>
+                                  <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                                  absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                                  group-hover:opacity-100 transition-opacity whitespace-nowrap
+                                  pointer-events-none">Click to toggle the channel on or off</div>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <button title="Delete notification rule" type="submit" classname="group relative flex-shrink-0">
+                            <svg class="w-6 h-6 text-gray-400 dark:text-neutral-500 hover:text-red-500 dark:hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="Windframe_6qKc8DFoo">
+                          <path strokelinecap="round" strokelinejoin="round" strokewidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                            <div classname="mb-2 px-3 py-1.5 bg-gray-900 dark:bg-neutral-100 text-white text-xs rounded-lg
+                            absolute bottom-full left-1/2 -translate-x-1/2 dark:text-neutral-900 opacity-0
+                            group-hover:opacity-100 transition-opacity whitespace-nowrap
+                            pointer-events-none">Delete</div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main></div>
+        </div>
+      </div>
+    
+  
+);
+
+export default UserProfilePage;

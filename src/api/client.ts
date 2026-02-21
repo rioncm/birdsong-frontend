@@ -3,7 +3,8 @@ import axios from "axios";
 import { config } from "../config";
 import type {
   DetectionTimelineResponse,
-  QuarterPresetsResponse
+  QuarterPresetsResponse,
+  RecordingMetadata
 } from "./types";
 
 const http = axios.create({
@@ -32,5 +33,10 @@ export async function fetchQuarters(date?: string): Promise<QuarterPresetsRespon
   const response = await http.get<QuarterPresetsResponse>("/detections/quarters", {
     params: { date }
   });
+  return response.data;
+}
+
+export async function fetchRecordingMetadata(wavId: string): Promise<RecordingMetadata> {
+  const response = await http.get<RecordingMetadata>(`/recordings/${encodeURIComponent(wavId)}/meta`);
   return response.data;
 }

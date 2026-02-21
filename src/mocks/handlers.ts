@@ -49,7 +49,9 @@ function buildTimelineResponse(): DetectionTimelineResponse {
           species,
           recording: {
             wav_id: `mock-${index}`,
-            url: "https://example.com/mock.wav"
+            url: "https://actions.google.com/sounds/v1/animals/bird_chirp.ogg",
+            meta_url: `/recordings/mock-${index}/meta`,
+            duration_seconds: 2.5
           },
           location_hint: "Backyard"
         }
@@ -90,6 +92,22 @@ export const handlers = [
   http.get("/detections/timeline", async () => {
     await delay(400);
     return HttpResponse.json(buildTimelineResponse());
+  }),
+  http.get("/recordings/:wavId/meta", async ({ params, request }) => {
+    await delay(100);
+    const wavId = String(params.wavId ?? "mock-0");
+    const url = new URL(request.url);
+    return HttpResponse.json({
+      wav_id: wavId,
+      path: `/tmp/${wavId}.ogg`,
+      url: "https://actions.google.com/sounds/v1/animals/bird_chirp.ogg",
+      media_type: "audio/ogg",
+      duration_seconds: 2.5,
+      source_id: "mock-device",
+      source_name: "mock-device",
+      source_display_name: "Mock Device",
+      source_location: url.hostname
+    });
   }),
   http.get("/detections/quarters", async () => {
     await delay(200);

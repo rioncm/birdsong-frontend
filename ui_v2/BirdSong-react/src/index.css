@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+
+/* Use `.dark` on <html> or <body> to enable dark styles */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ===== LIGHT THEME (default) ===== */
+@theme {
+  /* Surfaces */
+  --color-page:        246 247 251; /* #F6F7FB */
+  --color-page-alt:    233 237 247; /* #E9EDF7 */
+  --color-header:       36  56  91; /* #24385B */
+  --color-card:        255 255 255; /* #FFFFFF */
+  --color-card-header: 237 242 255; /* #EDF2FF */
+  --color-chip:        229 245 255; /* #E5F5FF */
+  --color-input:       249 250 251; /* #F9FAFB */
+
+  /* Text */
+  --color-fg-default:   17  24  39; /* #111827 */
+  --color-fg-muted:     75  85  99; /* #4B5563 */
+  --color-fg-on-accent: 255 255 255; /* #FFFFFF */
+
+  /* Borders */
+  --color-border-subtle: 209 213 219; /* #D1D5DB */
+  --color-border-strong: 156 163 175; /* #9CA3AF */
+  --color-border-focus:   56 189 248; /* #38BDF8 */
+
+  /* BirdSong spectrum (highlights / emphasis) */
+  --color-accent-blue:   46  70 130; /* primary */
+  --color-accent-teal:   92 151 171;
+  --color-accent-green: 121 171  89;
+  --color-accent-gold:  241 151  67;
+  --color-accent-lime:  185 226  74;
+  --color-accent-red:   212  65  48;
+}
+
+/* ===== DARK THEME ===== */
+.dark {
+  @theme {
+    /* Surfaces */
+    --color-page:          2   6  23; /* #020617 */
+    --color-page-alt:      5   8  22; /* #050816 */
+    --color-header:        2   6  23; /* #020617 */
+    --color-card:          5   8  22; /* #050816 */
+    --color-card-header:  15  23  42; /* #0F172A */
+    --color-chip:          2  44  34; /* #022C22 */
+    --color-input:         2   6  23; /* #020617 */
+
+    /* Text */
+    --color-fg-default:   249 250 251; /* #F9FAFB */
+    --color-fg-muted:     156 163 175; /* #9CA3AF */
+    --color-fg-on-accent: 255 255 255; /* #FFFFFF */
+
+    /* Borders */
+    --color-border-subtle: 31  41  55; /* #1F2937 */
+    --color-border-strong: 75  85  99; /* #4B5563 */
+    --color-border-focus:  56 189 248; /* #38BDF8 */
+
+    /* Accents – same hues; they pop on dark */
+    --color-accent-blue:   46  70 130;
+    --color-accent-teal:   92 151 171;
+    --color-accent-green: 121 171  89;
+    --color-accent-gold:  241 151  67;
+    --color-accent-lime:  185 226  74;
+    --color-accent-red:   212  65  48;
+  }
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: inherit;
+}
+
+body {
+  margin: 0;
+}
