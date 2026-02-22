@@ -3,7 +3,7 @@ export interface FrontendConfig {
 }
 
 const defaultConfig: FrontendConfig = {
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000"
+  apiBaseUrl: "https://api.birdsong.diy"
 };
 
 export const config = Object.freeze(defaultConfig);

@@ -17,7 +17,20 @@ export interface RecordingPreview {
   wav_id?: string;
   path?: string;
   url?: string;
+  meta_url?: string;
   duration_seconds?: number;
+}
+
+export interface RecordingMetadata {
+  wav_id: string;
+  path: string;
+  url: string;
+  media_type: string;
+  duration_seconds?: number;
+  source_id?: string;
+  source_name?: string;
+  source_display_name?: string;
+  source_location?: string;
 }
 
 export interface DetectionItem {
