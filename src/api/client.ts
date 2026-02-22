@@ -12,6 +12,13 @@ const http = axios.create({
   timeout: 10_000
 });
 
+function normalizeIsoCursor(value?: string): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+  return value.endsWith("Z") ? value.slice(0, -1) + "+00:00" : value;
+}
+
 export async function fetchTimeline(params: {
   bucketMinutes?: number;
   limit?: number;
@@ -21,6 +28,8 @@ export async function fetchTimeline(params: {
   const { bucketMinutes, ...rest } = params;
   const queryParams = {
     ...rest,
+    before: normalizeIsoCursor(rest.before),
+    after: normalizeIsoCursor(rest.after),
     ...(typeof bucketMinutes === "number" ? { bucket_minutes: bucketMinutes } : {})
   };
   const response = await http.get<DetectionTimelineResponse>("/detections/timeline", {
