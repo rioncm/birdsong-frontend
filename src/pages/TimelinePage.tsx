@@ -28,9 +28,10 @@ export function TimelinePage(): JSX.Element {
   const timelineSettingsValue: TimelineSettingsValue = useMemo(
     () => ({
       bucketMinutes: preferences.timeline.bucketMinutes,
-      startCursor: preferences.timeline.startCursor ?? undefined
+      startCursor: preferences.timeline.startCursor ?? undefined,
+      playbackFilter: preferences.timeline.playbackFilter
     }),
-    [preferences.timeline.bucketMinutes, preferences.timeline.startCursor]
+    [preferences.timeline.bucketMinutes, preferences.timeline.startCursor, preferences.timeline.playbackFilter]
   );
 
   const quartersDateParam = useMemo(
@@ -40,7 +41,8 @@ export function TimelinePage(): JSX.Element {
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, error } = useTimeline({
     bucketMinutes: timelineSettingsValue.bucketMinutes,
-    startCursor: timelineSettingsValue.startCursor
+    startCursor: timelineSettingsValue.startCursor,
+    playbackFilter: timelineSettingsValue.playbackFilter
   });
 
   const { data: quarters } = useQuarterPresets(quartersDateParam);
@@ -55,26 +57,31 @@ export function TimelinePage(): JSX.Element {
   const handleApplySettings = (nextValue: TimelineSettingsValue) => {
     updateTimeline({
       bucketMinutes: nextValue.bucketMinutes,
-      startCursor: nextValue.startCursor ?? null
+      startCursor: nextValue.startCursor ?? null,
+      playbackFilter: nextValue.playbackFilter
     });
     setSettingsOpen(false);
   };
 
   const summaryText = useMemo(() => {
+    const filterLabel =
+      timelineSettingsValue.playbackFilter === "enhanced"
+        ? "Enhanced playback"
+        : "Original playback";
     if (!timelineSettingsValue.startCursor) {
-      return `Showing the latest detections in ${timelineSettingsValue.bucketMinutes}-minute buckets.`;
+      return `Showing the latest detections in ${timelineSettingsValue.bucketMinutes}-minute buckets. ${filterLabel}.`;
     }
 
     const local = new Date(timelineSettingsValue.startCursor);
     if (Number.isNaN(local.getTime())) {
-      return `Showing the latest detections in ${timelineSettingsValue.bucketMinutes}-minute buckets.`;
+      return `Showing the latest detections in ${timelineSettingsValue.bucketMinutes}-minute buckets. ${filterLabel}.`;
     }
 
     return `Anchored at ${local.toLocaleString(undefined, {
       dateStyle: "medium",
       timeStyle: "short"
-    })} in ${timelineSettingsValue.bucketMinutes}-minute buckets.`;
-  }, [timelineSettingsValue.bucketMinutes, timelineSettingsValue.startCursor]);
+    })} in ${timelineSettingsValue.bucketMinutes}-minute buckets. ${filterLabel}.`;
+  }, [timelineSettingsValue.bucketMinutes, timelineSettingsValue.startCursor, timelineSettingsValue.playbackFilter]);
 
   return (
     <div className="space-y-5">
@@ -147,6 +154,7 @@ export function TimelinePage(): JSX.Element {
           <TimelineBucketCard
             key={`${bucket.bucket_start ?? "unknown"}-${bucket.bucket_end ?? "open"}`}
             bucket={bucket}
+            playbackFilter={timelineSettingsValue.playbackFilter}
           />
         ))}
       </div>

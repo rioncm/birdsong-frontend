@@ -22,14 +22,16 @@ function normalizeIsoCursor(value?: string): string | undefined {
 export async function fetchTimeline(params: {
   bucketMinutes?: number;
   limit?: number;
+  playbackFilter?: "none" | "enhanced";
   before?: string;
   after?: string;
 }): Promise<DetectionTimelineResponse> {
-  const { bucketMinutes, ...rest } = params;
+  const { bucketMinutes, playbackFilter, ...rest } = params;
   const queryParams = {
     ...rest,
     before: normalizeIsoCursor(rest.before),
     after: normalizeIsoCursor(rest.after),
+    ...(playbackFilter ? { playback_filter: playbackFilter } : {}),
     ...(typeof bucketMinutes === "number" ? { bucket_minutes: bucketMinutes } : {})
   };
   const response = await http.get<DetectionTimelineResponse>("/detections/timeline", {
@@ -45,7 +47,18 @@ export async function fetchQuarters(date?: string): Promise<QuarterPresetsRespon
   return response.data;
 }
 
-export async function fetchRecordingMetadata(wavId: string): Promise<RecordingMetadata> {
-  const response = await http.get<RecordingMetadata>(`/recordings/${encodeURIComponent(wavId)}/meta`);
+export async function fetchRecordingMetadata(
+  wavId: string,
+  options?: {
+    playbackFilter?: "none" | "enhanced";
+    outputFormat?: "wav" | "mp3" | "ogg";
+  }
+): Promise<RecordingMetadata> {
+  const response = await http.get<RecordingMetadata>(`/recordings/${encodeURIComponent(wavId)}/meta`, {
+    params: {
+      ...(options?.playbackFilter ? { filter: options.playbackFilter } : {}),
+      ...(options?.outputFormat ? { format: options.outputFormat } : {})
+    }
+  });
   return response.data;
 }

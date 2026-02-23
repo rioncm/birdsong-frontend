@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { fetchRecordingMetadata } from "../api/client";
+import type { PlaybackFilter } from "../services/userPreferences";
 
 export interface RecordingClip {
   key: string;
@@ -17,6 +18,7 @@ interface RecordingListenModalProps {
   isOpen: boolean;
   clips: RecordingClip[];
   initialIndex: number;
+  playbackFilter?: PlaybackFilter;
   onClose: () => void;
 }
 
@@ -55,6 +57,7 @@ export function RecordingListenModal({
   isOpen,
   clips,
   initialIndex,
+  playbackFilter = "none",
   onClose
 }: RecordingListenModalProps): JSX.Element | null {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -151,7 +154,9 @@ export function RecordingListenModal({
       return;
     }
 
-    void fetchRecordingMetadata(activeClip.wavId)
+    void fetchRecordingMetadata(activeClip.wavId, {
+      playbackFilter
+    })
       .then((metadata) => {
         if (isCancelled) {
           return;
@@ -178,7 +183,7 @@ export function RecordingListenModal({
     return () => {
       isCancelled = true;
     };
-  }, [activeClip, isOpen]);
+  }, [activeClip, isOpen, playbackFilter]);
 
   useEffect(() => {
     if (!isOpen) {

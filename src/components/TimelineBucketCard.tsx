@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 
 import type { DetectionItem, TimelineBucket } from "../api/types";
+import type { PlaybackFilter } from "../services/userPreferences";
 import { RecordingListenModal, type RecordingClip } from "./RecordingListenModal";
 
 const SUMMARY_PREVIEW_LIMIT = 170;
 
 interface TimelineBucketCardProps {
   bucket: TimelineBucket;
+  playbackFilter: PlaybackFilter;
 }
 
 function formatBucketRange(start?: string | null, end?: string | null): string {
@@ -38,7 +40,7 @@ function getClipKey(detection: DetectionItem, index: number): string {
   return `${primaryId}-${wavId}`;
 }
 
-export function TimelineBucketCard({ bucket }: TimelineBucketCardProps): JSX.Element {
+export function TimelineBucketCard({ bucket, playbackFilter }: TimelineBucketCardProps): JSX.Element {
   const [lightboxImage, setLightboxImage] = useState<{ src: string; alt: string } | null>(null);
   const [expandedSummaries, setExpandedSummaries] = useState<Record<string, boolean>>({});
   const [isListenOpen, setListenOpen] = useState<boolean>(false);
@@ -256,6 +258,7 @@ export function TimelineBucketCard({ bucket }: TimelineBucketCardProps): JSX.Ele
         isOpen={isListenOpen}
         clips={recordingClips}
         initialIndex={listenIndex}
+        playbackFilter={playbackFilter}
         onClose={() => setListenOpen(false)}
       />
     </article>

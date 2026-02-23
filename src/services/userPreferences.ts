@@ -1,11 +1,14 @@
 import { DEFAULT_BUCKET_MINUTES } from "../hooks/useTimeline";
 
 const STORAGE_KEY = "birdsong:user-preferences";
-const CURRENT_VERSION = 1;
+const CURRENT_VERSION = 2;
+
+export type PlaybackFilter = "none" | "enhanced";
 
 export interface TimelinePreferences {
   bucketMinutes: number;
   startCursor: string | null;
+  playbackFilter: PlaybackFilter;
 }
 
 export interface UserPreferences {
@@ -23,7 +26,8 @@ const DEFAULT_PREFERENCES: UserPreferences = Object.freeze({
   version: CURRENT_VERSION,
   timeline: Object.freeze({
     bucketMinutes: DEFAULT_BUCKET_MINUTES,
-    startCursor: null
+    startCursor: null,
+    playbackFilter: "none" as PlaybackFilter
   })
 });
 
@@ -40,9 +44,23 @@ function clonePreferences(value: UserPreferences): UserPreferences {
     version: value.version,
     timeline: {
       bucketMinutes: value.timeline.bucketMinutes,
-      startCursor: value.timeline.startCursor
+      startCursor: value.timeline.startCursor,
+      playbackFilter: value.timeline.playbackFilter
     }
   };
+}
+
+function sanitizePlaybackFilter(
+  value: TimelinePreferences["playbackFilter"] | undefined,
+  fallback: TimelinePreferences["playbackFilter"] = "none"
+): PlaybackFilter {
+  if (value === "enhanced") {
+    return "enhanced";
+  }
+  if (value === "none") {
+    return "none";
+  }
+  return fallback;
 }
 
 function sanitizeTimeline(
@@ -59,9 +77,11 @@ function sanitizeTimeline(
       : value?.startCursor === null
       ? null
       : fallback.startCursor;
+  const playbackFilter = sanitizePlaybackFilter(value?.playbackFilter, fallback.playbackFilter);
   return {
     bucketMinutes,
-    startCursor
+    startCursor,
+    playbackFilter
   };
 }
 
@@ -121,7 +141,8 @@ function freezePreferences(value: UserPreferences): UserPreferences {
     version: value.version,
     timeline: Object.freeze({
       bucketMinutes: value.timeline.bucketMinutes,
-      startCursor: value.timeline.startCursor
+      startCursor: value.timeline.startCursor,
+      playbackFilter: value.timeline.playbackFilter
     })
   });
 }
@@ -186,7 +207,11 @@ export function updateTimelinePreferences(
     startCursor:
       typeof next.startCursor === "string" || next.startCursor === null
         ? next.startCursor
-        : currentState.timeline.startCursor
+        : currentState.timeline.startCursor,
+    playbackFilter: sanitizePlaybackFilter(
+      next.playbackFilter,
+      currentState.timeline.playbackFilter
+    )
   };
   setState({
     version: CURRENT_VERSION,

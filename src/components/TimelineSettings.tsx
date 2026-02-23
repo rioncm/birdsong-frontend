@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
+import type { PlaybackFilter } from "../services/userPreferences";
+
 export interface TimelineSettingsValue {
   bucketMinutes: number;
   startCursor?: string | null;
+  playbackFilter: PlaybackFilter;
 }
 
 interface TimelineSettingsProps {
@@ -14,6 +17,10 @@ interface TimelineSettingsProps {
 }
 
 const GROUPING_OPTIONS = [5, 10, 20, 30, 60];
+const PLAYBACK_FILTER_OPTIONS: Array<{ value: PlaybackFilter; label: string; description: string }> = [
+  { value: "none", label: "Original", description: "Play the recording as stored." },
+  { value: "enhanced", label: "Enhanced", description: "Apply speech-noise reduction tuned for birdsong." }
+];
 
 function formatDateInput(date: Date): string {
   const year = date.getFullYear();
@@ -78,6 +85,7 @@ export function TimelineSettings({
   const [bucketMinutes, setBucketMinutes] = useState<number>(value.bucketMinutes);
   const [anchorDate, setAnchorDate] = useState<string>("");
   const [anchorTime, setAnchorTime] = useState<string>("");
+  const [playbackFilter, setPlaybackFilter] = useState<PlaybackFilter>(value.playbackFilter);
 
   useEffect(() => {
     if (!isOpen) {
@@ -88,7 +96,8 @@ export function TimelineSettings({
     const parsed = parseStartCursor(value.startCursor);
     setAnchorDate(parsed?.date ?? "");
     setAnchorTime(parsed?.time ?? "");
-  }, [isOpen, value.bucketMinutes, value.startCursor]);
+    setPlaybackFilter(value.playbackFilter);
+  }, [isOpen, value.bucketMinutes, value.startCursor, value.playbackFilter]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -109,15 +118,16 @@ export function TimelineSettings({
   const canApply = !isAnchored || Boolean(buildAnchorISO(anchorDate, anchorTime));
 
   const previewLabel = useMemo(() => {
+    const filterLabel = playbackFilter === "enhanced" ? "Enhanced playback filter" : "Original playback";
     if (!isAnchored) {
-      return `Latest detections grouped in ${bucketMinutes}-minute intervals.`;
+      return `Latest detections grouped in ${bucketMinutes}-minute intervals with ${filterLabel}.`;
     }
     const display = formatDisplayDateTime(anchorDate, anchorTime);
     if (!display) {
-      return `Latest detections grouped in ${bucketMinutes}-minute intervals.`;
+      return `Latest detections grouped in ${bucketMinutes}-minute intervals with ${filterLabel}.`;
     }
-    return `${display} grouped in ${bucketMinutes}-minute intervals.`;
-  }, [anchorDate, anchorTime, bucketMinutes, isAnchored]);
+    return `${display} grouped in ${bucketMinutes}-minute intervals with ${filterLabel}.`;
+  }, [anchorDate, anchorTime, bucketMinutes, isAnchored, playbackFilter]);
 
   const lastUpdatedLabel = useMemo(() => {
     if (!value.startCursor) {
@@ -143,7 +153,8 @@ export function TimelineSettings({
     if (!isAnchored) {
       onApply({
         bucketMinutes,
-        startCursor: undefined
+        startCursor: undefined,
+        playbackFilter
       });
       return;
     }
@@ -155,7 +166,8 @@ export function TimelineSettings({
 
     onApply({
       bucketMinutes,
-      startCursor: nextAnchor
+      startCursor: nextAnchor,
+      playbackFilter
     });
   };
 
@@ -163,9 +175,11 @@ export function TimelineSettings({
     setBucketMinutes(value.bucketMinutes);
     setAnchorDate("");
     setAnchorTime("");
+    setPlaybackFilter(value.playbackFilter);
     onApply({
       bucketMinutes: value.bucketMinutes,
-      startCursor: undefined
+      startCursor: undefined,
+      playbackFilter: value.playbackFilter
     });
   };
 
@@ -235,6 +249,38 @@ export function TimelineSettings({
                       {option}
                       <span className="ml-1 text-xs font-semibold uppercase tracking-wide">min</span>
                     </span>
+                  </label>
+                );
+              })}
+            </div>
+          </section>
+
+          <section>
+            <p className="mb-3 text-sm font-semibold text-brand-text">Recording Playback Filter</p>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {PLAYBACK_FILTER_OPTIONS.map((option) => {
+                const isChecked = playbackFilter === option.value;
+                return (
+                  <label
+                    key={option.value}
+                    className={[
+                      "flex cursor-pointer flex-col gap-1 rounded-xl border px-3 py-3 transition",
+                      isChecked
+                        ? "border-brand-accentBlue bg-brand-chip text-brand-accentBlue"
+                        : "border-brand-borderSubtle bg-brand-card text-brand-muted hover:bg-brand-page"
+                    ].join(" ")}
+                  >
+                    <input
+                      type="radio"
+                      name="timeline-playback-filter"
+                      value={option.value}
+                      checked={isChecked}
+                      onChange={() => setPlaybackFilter(option.value)}
+                      disabled={isApplying}
+                      className="sr-only"
+                    />
+                    <span className="text-sm font-bold">{option.label}</span>
+                    <span className="text-xs leading-relaxed text-current/80">{option.description}</span>
                   </label>
                 );
               })}
