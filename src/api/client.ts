@@ -22,16 +22,14 @@ function normalizeIsoCursor(value?: string): string | undefined {
 export async function fetchTimeline(params: {
   bucketMinutes?: number;
   limit?: number;
-  playbackFilter?: "none" | "enhanced";
   before?: string;
   after?: string;
 }): Promise<DetectionTimelineResponse> {
-  const { bucketMinutes, playbackFilter, ...rest } = params;
+  const { bucketMinutes, ...rest } = params;
   const queryParams = {
     ...rest,
     before: normalizeIsoCursor(rest.before),
     after: normalizeIsoCursor(rest.after),
-    ...(playbackFilter ? { playback_filter: playbackFilter } : {}),
     ...(typeof bucketMinutes === "number" ? { bucket_minutes: bucketMinutes } : {})
   };
   const response = await http.get<DetectionTimelineResponse>("/detections/timeline", {
