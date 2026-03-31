@@ -45,7 +45,18 @@ export async function fetchQuarters(date?: string): Promise<QuarterPresetsRespon
   return response.data;
 }
 
-export async function fetchRecordingMetadata(wavId: string): Promise<RecordingMetadata> {
-  const response = await http.get<RecordingMetadata>(`/recordings/${encodeURIComponent(wavId)}/meta`);
+export async function fetchRecordingMetadata(
+  wavId: string,
+  options?: {
+    playbackFilter?: "none" | "enhanced";
+    outputFormat?: "wav" | "mp3" | "ogg";
+  }
+): Promise<RecordingMetadata> {
+  const response = await http.get<RecordingMetadata>(`/recordings/${encodeURIComponent(wavId)}/meta`, {
+    params: {
+      ...(options?.playbackFilter ? { filter: options.playbackFilter } : {}),
+      ...(options?.outputFormat ? { format: options.outputFormat } : {})
+    }
+  });
   return response.data;
 }

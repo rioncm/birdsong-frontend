@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { fetchRecordingMetadata } from "../api/client";
+import type { PlaybackFilter } from "../services/userPreferences";
 
 export interface RecordingClip {
   key: string;
@@ -51,6 +52,31 @@ function formatRecordedAt(recordedAt?: string): { dateLabel: string; timeLabel: 
   };
 }
 
+function applyPlaybackFilterToUrl(rawUrl: string | undefined, filter: PlaybackFilter): string | null {
+  if (!rawUrl) {
+    return null;
+  }
+  try {
+    const parsed = new URL(rawUrl);
+    if (filter === "enhanced") {
+      parsed.searchParams.set("filter", "enhanced");
+    } else {
+      parsed.searchParams.delete("filter");
+    }
+    return parsed.toString();
+  } catch {
+    const [pathPart, queryPart = ""] = rawUrl.split("?", 2);
+    const params = new URLSearchParams(queryPart);
+    if (filter === "enhanced") {
+      params.set("filter", "enhanced");
+    } else {
+      params.delete("filter");
+    }
+    const queryString = params.toString();
+    return queryString ? `${pathPart}?${queryString}` : pathPart;
+  }
+}
+
 export function RecordingListenModal({
   isOpen,
   clips,
@@ -59,6 +85,7 @@ export function RecordingListenModal({
 }: RecordingListenModalProps): JSX.Element | null {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(initialIndex);
+  const [clipPlaybackFilters, setClipPlaybackFilters] = useState<Record<string, PlaybackFilter>>({});
   const [resolvedUrl, setResolvedUrl] = useState<string | null>(null);
   const [resolvedDuration, setResolvedDuration] = useState<number | null>(null);
   const [isResolving, setIsResolving] = useState<boolean>(false);
@@ -81,6 +108,9 @@ export function RecordingListenModal({
   }, [clips.length, initialIndex]);
 
   const activeClip = clips[activeIndex] ?? null;
+  const activePlaybackFilter: PlaybackFilter = activeClip
+    ? clipPlaybackFilters[activeClip.key] ?? "none"
+    : "none";
 
   useEffect(() => {
     if (!isOpen) {
@@ -88,6 +118,13 @@ export function RecordingListenModal({
     }
     setActiveIndex(safeIndex);
   }, [isOpen, safeIndex]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+    setClipPlaybackFilters({});
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -123,7 +160,7 @@ export function RecordingListenModal({
 
     let isCancelled = false;
 
-    const fallbackUrl = activeClip.recordingUrl ?? null;
+    const fallbackUrl = applyPlaybackFilterToUrl(activeClip.recordingUrl, activePlaybackFilter);
     const fallbackDuration =
       typeof activeClip.durationSeconds === "number" && Number.isFinite(activeClip.durationSeconds)
         ? activeClip.durationSeconds
@@ -151,7 +188,9 @@ export function RecordingListenModal({
       return;
     }
 
-    void fetchRecordingMetadata(activeClip.wavId)
+    void fetchRecordingMetadata(activeClip.wavId, {
+      playbackFilter: activePlaybackFilter
+    })
       .then((metadata) => {
         if (isCancelled) {
           return;
@@ -178,7 +217,7 @@ export function RecordingListenModal({
     return () => {
       isCancelled = true;
     };
-  }, [activeClip, isOpen]);
+  }, [activeClip, activePlaybackFilter, isOpen]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -240,6 +279,16 @@ export function RecordingListenModal({
     }
     setIsPlaying(false);
     onClose();
+  };
+
+  const handlePlaybackFilterChange = (nextFilter: PlaybackFilter) => {
+    if (!activeClip) {
+      return;
+    }
+    setClipPlaybackFilters((current) => ({
+      ...current,
+      [activeClip.key]: nextFilter
+    }));
   };
 
   return (
@@ -315,6 +364,39 @@ export function RecordingListenModal({
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-muted">Time</p>
                 <p className="mt-1 text-base font-semibold text-brand-text">{timeLabel}</p>
               </div>
+            </div>
+
+            <div className="mt-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-muted">Clip Filter</p>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => handlePlaybackFilterChange("none")}
+                  className={[
+                    "rounded-lg border px-3 py-2 text-xs font-semibold transition",
+                    activePlaybackFilter === "none"
+                      ? "border-brand-accentBlue bg-brand-chip text-brand-accentBlue"
+                      : "border-brand-borderSubtle bg-brand-card text-brand-muted hover:bg-brand-page"
+                  ].join(" ")}
+                >
+                  Original
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handlePlaybackFilterChange("enhanced")}
+                  className={[
+                    "rounded-lg border px-3 py-2 text-xs font-semibold transition",
+                    activePlaybackFilter === "enhanced"
+                      ? "border-brand-accentBlue bg-brand-chip text-brand-accentBlue"
+                      : "border-brand-borderSubtle bg-brand-card text-brand-muted hover:bg-brand-page"
+                  ].join(" ")}
+                >
+                  Enhanced (+50%)
+                </button>
+              </div>
+              <p className="mt-2 text-[11px] text-brand-muted">
+                Enhanced applies noise cleanup and boosts volume by 50% for this clip only.
+              </p>
             </div>
 
             <div className="mt-4">
